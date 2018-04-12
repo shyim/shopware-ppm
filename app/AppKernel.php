@@ -1,9 +1,11 @@
 <?php
 
+use PHPPM\Utils;
 use Shopware\Kernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\HttpFoundation\Request;
 
 class AppKernel extends Kernel
 {
@@ -67,4 +69,18 @@ class AppKernel extends Kernel
 
         parent::__construct($environment, $debug);
     }
+
+    /**
+     * @param Request $request
+     * @return Enlight_Controller_Request_RequestHttp
+     */
+    public function transformSymfonyRequestToEnlightRequest(Request $request)
+    {
+        $enlight =  parent::transformSymfonyRequestToEnlightRequest($request);
+        Utils::hijackProperty($enlight, '_rawBody', (string) $request->getContent());
+
+        return $enlight;
+    }
+
+
 }
