@@ -6,10 +6,12 @@
 * [Performance boost up to 15x (due no bootstrap)](https://github.com/php-pm/php-pm#features)
 
 
-### Problems
+### Known problems
 
 * Shopware has some memory leaks
-* Shopware backend auth does not work
+* Language detection is broken
+* Worker crashes after MySQL Connection is timed out
+* [Without PR 1635 JSON Decoding does not work](https://github.com/shopware/shopware/pull/1635)
 
 
 ### How to setup
