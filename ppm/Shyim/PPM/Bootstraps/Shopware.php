@@ -71,15 +71,20 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
      * Does some necessary preparation before each request.
      *
      * @param \AppKernel $app
+     * @throws \Enlight_Event_Exception
      */
     public function preHandle($app)
     {
+        if ($app->getContainer()->initialized('events')) {
+            $app->getContainer()->get('events')->notify('PPM_Request_preHandle', ['app' => $app]);
+        }
     }
 
     /**
      * Does some necessary clean up after each request.
      *
      * @param \AppKernel $app
+     * @throws \Enlight_Event_Exception
      */
     public function postHandle($app)
     {
@@ -110,6 +115,10 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
         if ($container->initialized('front')) {
             Utils::hijackProperty($container->get('front'), 'request', null);
             Utils::hijackProperty($container->get('front'), 'response', null);
+        }
+
+        if ($app->getContainer()->initialized('events')) {
+            $app->getContainer()->get('events')->notify('PPM_Request_preHandle', ['app' => $app]);
         }
     }
 }
