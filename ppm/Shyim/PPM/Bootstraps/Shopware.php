@@ -111,14 +111,25 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
             $container->reset('shop');
         }
 
-
+        // Reset request and response
         if ($container->initialized('front')) {
             Utils::hijackProperty($container->get('front'), 'request', null);
             Utils::hijackProperty($container->get('front'), 'response', null);
         }
 
+        // Lets notify plugins about request completed
         if ($app->getContainer()->initialized('events')) {
-            $app->getContainer()->get('events')->notify('PPM_Request_preHandle', ['app' => $app]);
+            $app->getContainer()->get('events')->notify('PPM_Request_postHandle', ['app' => $app]);
+        }
+
+        // Remove global template assigns
+        if ($container->initialized('template')) {
+            $container->get('template')->clearAllAssign();
+        }
+
+        // Remove backend auth
+        if ($container->initialized('auth')) {
+            $container->reset('auth');
         }
     }
 }
