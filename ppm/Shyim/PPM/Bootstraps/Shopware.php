@@ -2,6 +2,7 @@
 
 namespace Shyim\PPM\Bootstraps;
 
+use AppKernel;
 use PHPPM\Bootstraps\ApplicationEnvironmentAwareInterface;
 use PHPPM\Bootstraps\BootstrapInterface;
 use PHPPM\Bootstraps\HooksInterface;
@@ -23,6 +24,16 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
     protected $debug;
 
     /**
+     * This services must be reseted after every request
+     */
+    const RESET_SERVICES = [
+        'shop',
+        'session',
+        'backendsession',
+        'auth'
+    ];
+
+    /**
      * Instantiate the bootstrap, storing the $appenv
      *
      * @param $appenv
@@ -37,32 +48,21 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
     /**
      * Create a Symfony application
      *
-     * @return \AppKernel
+     * @return AppKernel
+     * @throws \Exception
      */
     public function getApplication()
     {
         // include applications autoload
-        $appAutoLoader = './app/autoload.php';
-        if (file_exists($appAutoLoader)) {
-            require $appAutoLoader;
-        } else {
-            require './vendor/autoload.php';
-        }
+        require './app/autoload.php';
 
         //since we need to change some services, we need to manually change some services
-        $app = new \AppKernel($this->appenv, $this->debug);
+        $app = new AppKernel($this->appenv, $this->debug);
 
-        Utils::bindAndCall(function() use ($app) {
-            // boot shopware
-            $app->boot();
-        }, $app);
+        $app->boot();
 
-        Utils::bindAndCall(function() use ($app) {
-        }, $app);
-
-        set_error_handler(function() {
-            return;
-        }, E_ALL);
+        // smarty throws many errors
+        set_error_handler(function() {}, E_ALL);
 
         return $app;
     }
@@ -70,7 +70,7 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
     /**
      * Does some necessary preparation before each request.
      *
-     * @param \AppKernel $app
+     * @param AppKernel $app
      * @throws \Enlight_Event_Exception
      */
     public function preHandle($app)
@@ -83,7 +83,7 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
     /**
      * Does some necessary clean up after each request.
      *
-     * @param \AppKernel $app
+     * @param AppKernel $app
      * @throws \Enlight_Event_Exception
      */
     public function postHandle($app)
@@ -91,24 +91,25 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
         $container = $app->getContainer();
 
         // Doctrine crashed and needs restart
-        if (!$container->get('models')->isOpen()) {
-            $container->reset('models');
-            $container->reset('dbal_connection');
+        if ($container->initialized('models')) {
+            $models = $container->get('models');
+
+            if (!$models->isOpen()) {
+                $container
+                    ->reset('models')
+                    ->reset('dbal_connection');
+
+                $container->load('dbal_connection');
+                $container->load('models');
+            } else {
+                $models->clear();
+            }
         }
 
-        // Remove session
-        if ($container->initialized('session')) {
-            $container->reset('session');
-        }
-
-        // Remove backend session
-        if ($container->initialized('backendsession')) {
-            $container->reset('backendsession');
-        }
-
-        // Remove container assigned shop
-        if ($container->initialized('shop')) {
-            $container->reset('shop');
+        foreach (self::RESET_SERVICES as $service) {
+            if ($container->initialized($service)) {
+                $container->reset($service);
+            }
         }
 
         // Reset request and response
@@ -125,11 +126,6 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
         // Remove global template assigns
         if ($container->initialized('template')) {
             $container->get('template')->clearAllAssign();
-        }
-
-        // Remove backend auth
-        if ($container->initialized('auth')) {
-            $container->reset('auth');
         }
     }
 }
