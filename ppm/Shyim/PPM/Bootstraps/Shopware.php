@@ -3,6 +3,7 @@
 namespace Shyim\PPM\Bootstraps;
 
 use AppKernel;
+use PDOException;
 use PHPPM\Bootstraps\ApplicationEnvironmentAwareInterface;
 use PHPPM\Bootstraps\BootstrapInterface;
 use PHPPM\Bootstraps\HooksInterface;
@@ -77,6 +78,13 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
     {
         if ($app->getContainer()->initialized('events')) {
             $app->getContainer()->get('events')->notify('PPM_Request_preHandle', ['app' => $app]);
+        }
+
+        try {
+            $app->getContainer()->get('db_connection')->query('SELECT 1');
+        } catch (PDOException $e) {
+            // Houston, we lost the MySQL Connection. Killing the worker is required
+            exit(-1);
         }
     }
 

@@ -9,7 +9,7 @@
 ### Known problems
 
 * Shopware has some memory leaks
-* Worker crashes after MySQL Connection is timed out
+* Sometimes frontend login does not work
 * [Without PR 1635 JSON Decoding does not work](https://github.com/shopware/shopware/pull/1635)
 
 
