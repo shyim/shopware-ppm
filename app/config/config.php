@@ -63,4 +63,8 @@ return array_replace_recursive($this->loadConfig($this->AppPath() . 'Configs/Def
         'webDir' => $projectDir . 'web',
         'cacheDir' => $projectDir . 'web/cache',
     ],
+
+    'trustedproxies' => [
+        '127.0.0.1',
+    ],
 ]);
