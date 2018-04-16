@@ -10,6 +10,7 @@
 
 * Shopware has some memory leaks
 * Sometimes frontend login does not work
+* Image Upload
 * [Without PR 1635 JSON Decoding does not work](https://github.com/shopware/shopware/pull/1635)
 
 
