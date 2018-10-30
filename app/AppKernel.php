@@ -79,6 +79,24 @@ class AppKernel extends Kernel
         $enlight = parent::transformSymfonyRequestToEnlightRequest($request);
         Utils::hijackProperty($enlight, '_rawBody', (string) $request->getContent());
 
+        $_FILES = [];
+
+        /**
+         * @var string $name
+         * @var Symfony\Component\HttpFoundation\File\UploadedFile $file
+         */
+        foreach ($request->files->all() as $name => $file) {
+            $_FILES[$name] = [
+                'name' => $file->getClientOriginalName(),
+                'type' => $file->getMimeType(),
+                'tmp_name' => $file->getPathname(),
+                'error' => UPLOAD_ERR_OK,
+                'size' => $file->getSize()
+            ];
+        }
+
         return $enlight;
     }
+
+
 }

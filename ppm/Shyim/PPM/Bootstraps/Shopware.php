@@ -4,6 +4,7 @@ namespace Shyim\PPM\Bootstraps;
 
 // We need to patch this **** Zend_Session
 require dirname(__DIR__) . '/Patch/Session.php';
+require dirname(__DIR__) . '/Patch/MediaManager.php';
 
 use AppKernel;
 use PDOException;

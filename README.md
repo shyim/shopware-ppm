@@ -9,8 +9,6 @@
 ### Known problems
 
 * Shopware has some memory leaks
-* Image Upload
-* [Without PR 1635 JSON Decoding does not work](https://github.com/shopware/shopware/pull/1635)
 
 
 ### How to setup
