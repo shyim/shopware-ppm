@@ -9,7 +9,6 @@
 ### Known problems
 
 * Shopware has some memory leaks
-* Sometimes frontend login does not work
 * Image Upload
 * [Without PR 1635 JSON Decoding does not work](https://github.com/shopware/shopware/pull/1635)
 
@@ -23,7 +22,7 @@
 
 ### Benchmark
 
-Shopware 5.4.2 (without HttpCache, 16 workers)
+Shopware 5.5.2 (without HttpCache, 16 workers)
 ```
 shyim@yuuuuuukiiiiiiiiiiiiiiiii ~/C/shopware-pm> ab -n 10000 -c 20  http://ppm/
 This is ApacheBench, Version 2.3 <$Revision: 1807734 $>

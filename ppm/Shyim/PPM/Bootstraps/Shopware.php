@@ -2,6 +2,9 @@
 
 namespace Shyim\PPM\Bootstraps;
 
+// We need to patch this **** Zend_Session
+require dirname(__DIR__) . '/Patch/Session.php';
+
 use AppKernel;
 use PDOException;
 use PHPPM\Bootstraps\ApplicationEnvironmentAwareInterface;
@@ -76,6 +79,12 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
      */
     public function preHandle($app)
     {
+        \Zend_Session::$_sessionStarted = false;
+        \Zend_Session::$_writeClosed = false;
+        \Zend_Session::$_sessionCookieDeleted = false;
+        \Zend_Session::$_destroyed = false;
+        \Zend_Session::$_regenerateIdState = false;
+
         if ($app->getContainer()->initialized('events')) {
             $app->getContainer()->get('events')->notify('PPM_Request_preHandle', ['app' => $app]);
         }
@@ -135,5 +144,13 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
         if ($container->initialized('template')) {
             $container->get('template')->clearAllAssign();
         }
+
+        \Zend_Session::$_sessionStarted = false;
+        \Zend_Session::$_writeClosed = false;
+        \Zend_Session::$_sessionCookieDeleted = false;
+        \Zend_Session::$_destroyed = false;
+        \Zend_Session::$_regenerateIdState = false;
+        session_write_close();
+        session_destroy();
     }
 }
