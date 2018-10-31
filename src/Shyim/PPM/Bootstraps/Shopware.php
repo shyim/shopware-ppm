@@ -12,6 +12,7 @@ use PHPPM\Bootstraps\ApplicationEnvironmentAwareInterface;
 use PHPPM\Bootstraps\BootstrapInterface;
 use PHPPM\Bootstraps\HooksInterface;
 use PHPPM\Utils;
+use Symfony\Component\Config\Exception\FileLoaderLoadException;
 
 /**
  * A default bootstrap for the Shopware
@@ -37,6 +38,11 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
         'backendsession',
         'auth'
     ];
+
+    /**
+     * @var string
+     */
+    private $shopwareSocket;
 
     /**
      * Instantiate the bootstrap, storing the $appenv
@@ -65,6 +71,16 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
         $app = new AppKernel($this->appenv, $this->debug);
 
         $app->boot();
+
+//        $socketFolder = $app->getContainer()->getParameter('shopware.app.rootdir') . '/.shopware';
+//
+//        if (!file_exists($socketFolder)) {
+//            mkdir($socketFolder);
+//        }
+//
+//        $this->shopwareSocket = $socketFolder . '/' . uniqid('sw', true) . '.sock';
+//
+//        touch($this->shopwareSocket);
 
         // smarty throws many errors
         set_error_handler(function() {}, E_ALL);
@@ -137,8 +153,8 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
         }
 
         // Lets notify plugins about request completed
-        if ($app->getContainer()->initialized('events')) {
-            $app->getContainer()->get('events')->notify('PPM_Request_postHandle', ['app' => $app]);
+        if ($container->initialized('events')) {
+            $container->get('events')->notify('PPM_Request_postHandle', ['app' => $app]);
         }
 
         // Remove global template assigns
@@ -153,5 +169,29 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
         \Zend_Session::$_regenerateIdState = false;
         session_write_close();
         session_destroy();
+
+
+        // @todo: Implement soft worker restart in PHP-PM
+
+//        if ($this->shopwareSocket) {
+//            if ($container->initialized('shopware.cache_manager') && $container->get('shopware.cache_manager')->hasClearedCache()) {
+//                $folder = dirname($this->shopwareSocket);
+//                foreach (scandir($folder) as $item) {
+//                    if ($item === '.' || $item === '..') {
+//                        continue;
+//                    }
+//                    unlink($folder . '/' . $item);
+//                }
+//            }
+//
+//            if (!file_exists($this->shopwareSocket)) {
+//                $con = $container->get('db_connect//ion');
+//                $enlight = $container->get('application');
+//                $container->reset();
+//                $container->set('db_connection', $con);
+//                $container->set('kernel', $app);
+//                $container->set('application', $enlight);
+//            }
+//        }
     }
 }

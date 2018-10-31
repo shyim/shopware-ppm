@@ -17,5 +17,8 @@
             <argument type="string">php://stderr</argument>
         </service>
 
+        <service id="ppm.cache_manager" class="Shyim\PPM\Components\CacheManager" decorates="shopware.cache_manager">
+            <argument type="service" id="service_container"/>
+        </service>
     </services>
 </container>

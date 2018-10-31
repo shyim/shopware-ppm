@@ -1,12 +1,15 @@
 <?php
 
-$db = parse_url(getenv('DATABASE_URL'));
+$db = false;
 
-// Fallback if e.g. the password contains URL invalid parameters
-if (!$db) {
+if (getenv('DATABASE_URL') && $db = parse_url(getenv('DATABASE_URL'))) {
+    $db = array_map('rawurldecode', $db);
+    $db['path'] = substr($db['path'], 1);
+} else {
+    // Fallback if e.g. the password contains URL invalid parameters
     $db['user'] = getenv('DB_USERNAME');
     $db['pass'] = getenv('DB_PASSWORD');
-    $db['path'] = '/' . getenv('DB_DATABASE');
+    $db['path'] = getenv('DB_DATABASE');
     $db['host'] = getenv('DB_HOST');
     $db['port'] = getenv('DB_PORT');
     $db['scheme'] = 'mysql';
@@ -15,11 +18,10 @@ if (!$db) {
 $projectDir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR;
 
 return array_replace_recursive($this->loadConfig($this->AppPath() . 'Configs/Default.php'), [
-
     'db' => [
         'username' => $db['user'],
         'password' => $db['pass'],
-        'dbname'   => substr($db['path'], 1),
+        'dbname'   => $db['path'],
         'host'     => $db['host'],
     ],
 
@@ -55,8 +57,31 @@ return array_replace_recursive($this->loadConfig($this->AppPath() . 'Configs/Def
 
     'app' => [
         'rootDir' => $projectDir,
+        /**
+         * Since Shopware 5.5 the configuration for 'downloadsDir' and 'documentsDir'
+         * have become obsolete and are now handled by the defined filesystem adapters below.
+         */
         'downloadsDir' => $projectDir . 'files/downloads',
         'documentsDir' => $projectDir . 'files/documents',
+    ],
+
+    /**
+     * The PrefixFilesystem is available since Shopware 5.5 and allows plugins
+     * to use dedicated filesystems for public and private files.
+     *
+     * @see https://developers.shopware.com/developers-guide/shopware-5-upgrade-guide-for-developers/#filesystem-abstraction-layer
+     */
+    'filesystem' => [
+        'private' => [
+            'config' => [
+                'root' => $projectDir . 'files' . DIRECTORY_SEPARATOR,
+            ],
+        ],
+        'public' => [
+            'config' => [
+                'root' => $projectDir . 'web' . DIRECTORY_SEPARATOR,
+            ],
+        ],
     ],
 
     'web' => [
@@ -67,4 +92,8 @@ return array_replace_recursive($this->loadConfig($this->AppPath() . 'Configs/Def
     'trustedproxies' => [
         '127.0.0.1',
     ],
+
+    'ppm' => [
+        'workers' => '16'
+    ]
 ]);
