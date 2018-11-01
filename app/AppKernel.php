@@ -118,6 +118,7 @@ class AppKernel extends Kernel
         }
     }
 
+
     /**
      * @param Request $request
      * @return Enlight_Controller_Request_RequestHttp
@@ -138,11 +139,22 @@ class AppKernel extends Kernel
                 'name' => $file->getClientOriginalName(),
                 'type' => $file->getMimeType(),
                 'tmp_name' => $file->getPathname(),
-                'error' => UPLOAD_ERR_OK,
+                'error' => $file->getError(),
                 'size' => $file->getSize()
             ];
         }
 
         return $enlight;
+    }
+
+    public function transformEnlightResponseToSymfonyResponse(\Enlight_Controller_Response_ResponseHttp $response)
+    {
+        $syResponse = parent::transformEnlightResponseToSymfonyResponse($response);
+
+        if ($this->container->initialized('shopware.cache_manager') && $this->container->get('shopware.cache_manager')->hasClearedCache()) {
+            $syResponse->headers->set('X-PPM-Restart', 'all');
+        }
+
+        return $syResponse;
     }
 }

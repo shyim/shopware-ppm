@@ -40,11 +40,6 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
     ];
 
     /**
-     * @var string
-     */
-    private $shopwareSocket;
-
-    /**
      * Instantiate the bootstrap, storing the $appenv
      *
      * @param $appenv
@@ -71,16 +66,6 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
         $app = new AppKernel($this->appenv, $this->debug);
 
         $app->boot();
-
-//        $socketFolder = $app->getContainer()->getParameter('shopware.app.rootdir') . '/.shopware';
-//
-//        if (!file_exists($socketFolder)) {
-//            mkdir($socketFolder);
-//        }
-//
-//        $this->shopwareSocket = $socketFolder . '/' . uniqid('sw', true) . '.sock';
-//
-//        touch($this->shopwareSocket);
 
         // smarty throws many errors
         set_error_handler(function() {}, E_ALL);
@@ -169,29 +154,5 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
         \Zend_Session::$_regenerateIdState = false;
         session_write_close();
         session_destroy();
-
-
-        // @todo: Implement soft worker restart in PHP-PM
-
-//        if ($this->shopwareSocket) {
-//            if ($container->initialized('shopware.cache_manager') && $container->get('shopware.cache_manager')->hasClearedCache()) {
-//                $folder = dirname($this->shopwareSocket);
-//                foreach (scandir($folder) as $item) {
-//                    if ($item === '.' || $item === '..') {
-//                        continue;
-//                    }
-//                    unlink($folder . '/' . $item);
-//                }
-//            }
-//
-//            if (!file_exists($this->shopwareSocket)) {
-//                $con = $container->get('db_connect//ion');
-//                $enlight = $container->get('application');
-//                $container->reset();
-//                $container->set('db_connection', $con);
-//                $container->set('kernel', $app);
-//                $container->set('application', $enlight);
-//            }
-//        }
     }
 }
