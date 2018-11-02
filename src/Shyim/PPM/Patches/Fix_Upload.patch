@@ -1,0 +1,16 @@
+Index: File/UploadedFile.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- File/UploadedFile.php	(revision 5aea7a86ca3203dd7a257e765b4b9c9cfd01c6c0)
++++ File/UploadedFile.php	(date 1541171812000)
+@@ -61,7 +61,7 @@
+         $this->mimeType = $mimeType ?: 'application/octet-stream';
+         $this->size = $size;
+         $this->error = $error ?: UPLOAD_ERR_OK;
+-        $this->test = (bool) $test;
++        $this->test = true;
+
+         parent::__construct($path, UPLOAD_ERR_OK === $this->error);
+     }

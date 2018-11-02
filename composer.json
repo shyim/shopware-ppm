@@ -39,6 +39,9 @@
             "shopware/shopware": {
                 "Remove die / exits from shopware": "src/Shyim/PPM/Patches/SW-22872_-_Fix_controller_response.patch",
                 "Fix Zend Session for multiple times running": "src/Shyim/PPM/Patches/Fix_Zend_Session_For_Multiple_Running.patch"
+            },
+            "symfony/http-foundation": {
+                "Fix custom created UploadedFile instances": "src/Shyim/PPM/Patches/Fix_Upload.patch"
             }
         }
     },
