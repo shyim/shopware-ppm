@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8f9270491b38ac779006c045122db2c9",
+    "content-hash": "789dbe8dd3758dc32f2db816c70d4567",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.70.0",
+            "version": "3.70.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "49c563dfdf890ac510f441c9ae5537ffc2de8ccf"
+                "reference": "e50b0130baed05202be170601a483f56648815f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/49c563dfdf890ac510f441c9ae5537ffc2de8ccf",
-                "reference": "49c563dfdf890ac510f441c9ae5537ffc2de8ccf",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/e50b0130baed05202be170601a483f56648815f0",
+                "reference": "e50b0130baed05202be170601a483f56648815f0",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-10-30T20:50:23+00:00"
+            "time": "2018-11-01T22:27:40+00:00"
         },
         {
             "name": "bcremer/line-reader",
@@ -420,6 +420,50 @@
                 "zikula"
             ],
             "time": "2018-08-27T06:10:37+00:00"
+        },
+        {
+            "name": "cweagans/composer-patches",
+            "version": "1.6.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cweagans/composer-patches.git",
+                "reference": "2ec4f00ff5fb64de584c8c4aea53bf9053ecb0b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cweagans/composer-patches/zipball/2ec4f00ff5fb64de584c8c4aea53bf9053ecb0b3",
+                "reference": "2ec4f00ff5fb64de584c8c4aea53bf9053ecb0b3",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "composer/composer": "~1.0",
+                "phpunit/phpunit": "~4.6"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "cweagans\\Composer\\Patches"
+            },
+            "autoload": {
+                "psr-4": {
+                    "cweagans\\Composer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Cameron Eagans",
+                    "email": "me@cweagans.net"
+                }
+            ],
+            "description": "Provides a way to patch Composer packages.",
+            "time": "2018-05-11T18:00:16+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -2903,6 +2947,11 @@
                 "bin/ppm"
             ],
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "X-PPM-Restart Header": "https://patch-diff.githubusercontent.com/raw/php-pm/php-pm/pull/438.patch"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "PHPPM\\": "src"
@@ -3939,6 +3988,12 @@
                 "ext-zend-opcache": "*"
             },
             "type": "project",
+            "extra": {
+                "patches_applied": {
+                    "Remove die / exits from shopware": "src/Shyim/PPM/Patches/SW-22872_-_Fix_controller_response.patch",
+                    "Fix Zend Session for multiple times running": "src/Shyim/PPM/Patches/Fix_Zend_Session_For_Multiple_Running.patch"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Common\\Proxy\\AbstractProxyFactory": "engine/Library/",

@@ -21,14 +21,25 @@
         "shopware/shopware": "^5.5",
         "vlucas/phpdotenv": "~2.0",
         "ocramius/package-versions": "1.2.0",
-        "php-pm/php-pm": "^1.0",
-        "php-pm/httpkernel-adapter": "dev-master"
+        "php-pm/php-pm": "1.0.5",
+        "php-pm/httpkernel-adapter": "dev-master",
+        "cweagans/composer-patches": "^1.5.0"
     },
     "extra": {
+        "enable-patching": true,
         "installer-paths": {
             "Plugins/Local/Backend/{$name}/": ["type:shopware-backend-plugin"],
             "Plugins/Local/Core/{$name}/": ["type:shopware-core-plugin"],
             "Plugins/Local/Frontend/{$name}/": ["type:shopware-frontend-plugin"]
+        },
+        "patches": {
+            "php-pm/php-pm": {
+                "X-PPM-Restart Header": "https://patch-diff.githubusercontent.com/raw/php-pm/php-pm/pull/438.patch"
+            },
+            "shopware/shopware": {
+                "Remove die / exits from shopware": "src/Shyim/PPM/Patches/SW-22872_-_Fix_controller_response.patch",
+                "Fix Zend Session for multiple times running": "src/Shyim/PPM/Patches/Fix_Zend_Session_For_Multiple_Running.patch"
+            }
         }
     },
     "include-path": [

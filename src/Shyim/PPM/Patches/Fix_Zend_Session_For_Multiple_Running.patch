@@ -1,0 +1,105 @@
+Index: engine/Library/Zend/Session.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- engine/Library/Zend/Session.php	(date 1541163784000)
++++ engine/Library/Zend/Session.php	(date 1541165608000)
+@@ -65,7 +65,7 @@
+      *
+      * @var bool
+      */
+-    protected static $_sessionStarted = false;
++    public static $_sessionStarted = false;
+
+     /**
+      * Whether or not the session id has been regenerated this request.
+@@ -77,7 +77,7 @@
+      *
+      * @var int
+      */
+-    protected static $_regenerateIdState = 0;
++    public static $_regenerateIdState = 0;
+
+     /**
+      * Private list of php's ini values for ext/session
+@@ -133,21 +133,21 @@
+      *
+      * @var bool
+      */
+-    protected static $_writeClosed = false;
++    public static $_writeClosed = false;
+
+     /**
+      * Whether or not session id cookie has been deleted
+      *
+      * @var bool
+      */
+-    protected static $_sessionCookieDeleted = false;
++    public static $_sessionCookieDeleted = false;
+
+     /**
+      * Whether or not session has been destroyed via session_destroy()
+      *
+      * @var bool
+      */
+-    protected static $_destroyed = false;
++    public static $_destroyed = false;
+
+     /**
+      * Whether or not session must be initiated before usage
+@@ -272,7 +272,7 @@
+             array(&$saveHandler, 'write'),
+             array(&$saveHandler, 'destroy'),
+             array(&$saveHandler, 'gc')
+-            );
++        );
+     }
+
+
+@@ -364,7 +364,7 @@
+             $cookieParams['path'],
+             $cookieParams['domain'],
+             $cookieParams['secure']
+-            );
++        );
+
+         // normally "rememberMe()" represents a security context change, so should use new session id
+         self::regenerateId();
+@@ -463,14 +463,10 @@
+         if (!self::$_unitTestEnabled && headers_sent($filename, $linenum)) {
+             /** @see Zend_Session_Exception */
+             throw new Zend_Session_Exception("Session must be started before any output has been sent to the browser;"
+-               . " output started in {$filename}/{$linenum}");
++                . " output started in {$filename}/{$linenum}");
+         }
+
+         // See http://www.php.net/manual/en/ref.session.php for explanation
+-        if (!self::$_writeClosed && !self::$_unitTestEnabled && defined('SID')) {
+-            /** @see Zend_Session_Exception */
+-            throw new Zend_Session_Exception('session has already been started by session.auto-start or session_start()');
+-        }
+
+         /**
+          * Hack to throw exceptions on start instead of php errors
+@@ -706,11 +702,6 @@
+      */
+     public static function setId($id)
+     {
+-        if (!self::$_writeClosed && !self::$_unitTestEnabled && defined('SID')) {
+-            /** @see Zend_Session_Exception */
+-            throw new Zend_Session_Exception('The session has already been started.  The session id must be set first.');
+-        }
+-
+         if (!self::$_unitTestEnabled && headers_sent($filename, $linenum)) {
+             /** @see Zend_Session_Exception */
+             throw new Zend_Session_Exception("You must call ".__CLASS__.'::'.__FUNCTION__.
+@@ -837,7 +828,7 @@
+                 $cookie_params['domain'],
+                 $cookie_params['secure'],
+                 $cookie_params['httponly']
+-                );
++            );
+         }
+     }
+
