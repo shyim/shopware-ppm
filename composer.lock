@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "789dbe8dd3758dc32f2db816c70d4567",
+    "content-hash": "4190eea8bc851589c7d818a37495384e",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.70.2",
+            "version": "3.70.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "e50b0130baed05202be170601a483f56648815f0"
+                "reference": "8278052a097a4ebe2b798fab7e2e3c907bc01a47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/e50b0130baed05202be170601a483f56648815f0",
-                "reference": "e50b0130baed05202be170601a483f56648815f0",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8278052a097a4ebe2b798fab7e2e3c907bc01a47",
+                "reference": "8278052a097a4ebe2b798fab7e2e3c907bc01a47",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-11-01T22:27:40+00:00"
+            "time": "2018-11-02T20:04:36+00:00"
         },
         {
             "name": "bcremer/line-reader",
@@ -4663,6 +4663,9 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "3.4-dev"
+                },
+                "patches_applied": {
+                    "Fix custom created UploadedFile instances": "src/Shyim/PPM/Patches/Fix_Upload.patch"
                 }
             },
             "autoload": {
