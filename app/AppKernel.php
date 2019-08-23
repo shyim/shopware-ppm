@@ -126,7 +126,6 @@ class AppKernel extends Kernel
     public function transformSymfonyRequestToEnlightRequest(Request $request)
     {
         $enlight = parent::transformSymfonyRequestToEnlightRequest($request);
-        Utils::hijackProperty($enlight, '_rawBody', (string)$request->getContent());
 
         $_FILES = [];
 

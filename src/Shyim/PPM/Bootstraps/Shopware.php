@@ -5,10 +5,7 @@ namespace Shyim\PPM\Bootstraps;
 use AppKernel;
 use PDOException;
 use PHPPM\Bootstraps\ApplicationEnvironmentAwareInterface;
-use PHPPM\Bootstraps\BootstrapInterface;
-use PHPPM\Bootstraps\HooksInterface;
 use PHPPM\Utils;
-use Symfony\Component\Config\Exception\FileLoaderLoadException;
 
 /**
  * A default bootstrap for the Shopware
@@ -92,6 +89,15 @@ class Shopware implements BootstrapInterface, HooksInterface, ApplicationEnviron
         } catch (PDOException $e) {
             // Houston, we lost the MySQL Connection. Killing the worker is required
             exit(-1);
+        }
+
+        if ($_SERVER['REQUEST_URI'] === '/start') {
+            $app->getContainer()->get('db_connection')->beginTransaction();
+
+        }
+
+        if ($_SERVER['REQUEST_URI'] === '/stop') {
+            $app->getContainer()->get('db_connection')->rollback();
         }
     }
 
